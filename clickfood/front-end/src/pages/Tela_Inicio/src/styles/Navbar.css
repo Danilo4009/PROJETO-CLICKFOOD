@@ -1,0 +1,30 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+}
+.logo {
+  height: 50px; /* Ajuste conforme necessário */
+  width: auto;
+}
+.search-bar {
+  width: 300px;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.search-bar {
+  width: 40%;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+}
+
+.navbar-icons span {
+  margin-left: 15px;
+  cursor: pointer;
+}
