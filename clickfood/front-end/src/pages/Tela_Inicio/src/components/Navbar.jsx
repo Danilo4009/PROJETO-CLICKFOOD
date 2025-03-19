@@ -6,15 +6,16 @@ function Navbar() {
   return (
     <nav className="navbar">
       <img src={logo} alt="Click Food" className="logo" />
-      <div className="navbar-icons">
+      <div className="search-container">
         <input
           type="text"
           placeholder="Buscar por item ou loja"
           className="search-bar"
         />
-
-        <span>Perfil</span>
-        <span>Carrinho</span>
+      </div>
+      <div className="navbar-icons">
+        <span className="profile">Perfil</span>
+        <span className="cart">Carrinho</span>
       </div>
     </nav>
   );
