@@ -4,6 +4,8 @@ import mcDonalds from "../assets/mcDonalds.png";
 import baixinho from "../assets/baixinho.jpg";
 import vipsushi from "../assets/vipsushi.png";
 import saboraldeia from "../assets/saboraldeia.png";
+import burguerking from "../assets/burguerking.png";
+import sodie from "../assets/sodie.jpeg";
 
 function Stores() {
   const stores = [
@@ -22,6 +24,14 @@ function Stores() {
     {
       name: "McDonald's",
       image: mcDonalds,
+    },
+    {
+      name: "Burguer King",
+      image: burguerking,
+    },
+    {
+      name: "Sodie Doces",
+      image: sodie,
     },
   ];
 
