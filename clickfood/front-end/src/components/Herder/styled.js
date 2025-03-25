@@ -57,6 +57,12 @@ export const AreaHeader = styled.div`
                     color: #000000;
                 }
 
+                .carrinho {
+                    color: #ea1d2c;
+                    margin-left: 20px;
+                    cursor: pointer;
+                }
+
                 @media screen and (max-width: 600px){
                     label {
                         display: none;

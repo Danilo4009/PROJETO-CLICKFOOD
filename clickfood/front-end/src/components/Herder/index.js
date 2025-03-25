@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
 import { AreaHeader } from './styled';
 
 function Header(props){
@@ -21,6 +23,7 @@ function Header(props){
                         <label>Endereço</label>
                         <img src={props.user.avatar} />
                         <label>{props.user.name}</label>
+                        <ShoppingCartIcon className='carrinho' />
                     </div>
                 </nav>
             </div>
