@@ -16,7 +16,7 @@ function Header(props){
                 <nav>
                     <ul>
                         <li><Link to="/">Início</Link></li>
-                        <li><Link to="/restaurantes">Restaurantes</Link></li>
+                        <li><Link to="/restaurantes">Cadastrar Loja</Link></li>
                     </ul>
 
                     <div className="avatar">
