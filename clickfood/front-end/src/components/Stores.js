@@ -52,12 +52,14 @@ const styles = {
     fontSize: "24px",
     fontWeight: "bold",
     marginBottom: "20px",
+    marginTop: "-10px",
   },
   storesList: {
     display: "flex",
     justifyContent: "space-between",
     flexWrap: "wrap",
     gap: "20px",
+    marginTop: "-10px",
   },
   storeCard: {
     width: "150px",

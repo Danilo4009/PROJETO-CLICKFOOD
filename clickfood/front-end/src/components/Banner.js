@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import banner1 from "../assets/pontue.jpeg";
-import banner2 from "../assets/cupom.jpeg";
-import banner3 from "../assets/entrega.jpeg";
+import banner1 from "../assets/cupom2.jpg";
+import banner2 from "../assets/entrega2.jpg";
+import banner3 from "../assets/parceiro3.jpg";
 
 const images = [banner1, banner2, banner3];
 
@@ -68,7 +68,7 @@ const styles = {
   },
   bannerContainer: {
     width: "100%",
-    height: "400px",
+    height: "370px",
     overflow: "hidden",
     display: "flex",
     alignItems: "center",
@@ -104,8 +104,8 @@ const styles = {
     gap: "8px",
   },
   indicator: {
-    width: "12px",
-    height: "12px",
+    width: "10px",
+    height: "10px",
     borderRadius: "50%",
     cursor: "pointer",
   },
