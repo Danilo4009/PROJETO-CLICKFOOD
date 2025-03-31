@@ -32,8 +32,15 @@ function Header(props) {
       const data = await response.json();
 
       if (data && data.address) {
-        const { city, town, village, state } = data.address;
-        setAddress(`${city || town || village}, ${state}`); // Exibe Cidade + Estado
+        const { road, city, town, village, state } = data.address;
+        // Monta o endereço com rua, cidade e estado
+        const street = road || ""; // Se não houver rua, fica vazio
+        const cityName = city || town || village || ""; // Pega o nome da cidade/town/village
+
+        // Remove vírgula extra se não houver rua
+        setAddress(
+          `${street}${street && cityName ? ", " : ""}${cityName}, ${state}`
+        );
       } else {
         setAddress("Endereço não encontrado");
       }
