@@ -29,5 +29,11 @@ model Restaurante {
   telefone String
 }
 
+model CartItem {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  price    Float
+  quantity Int
+}
 
 
