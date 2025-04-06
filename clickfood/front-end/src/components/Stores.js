@@ -1,101 +1,134 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Link, useLocation } from 'react-router-dom';
 
-const storesData = [
-  {
-    id: 1,
-    name: "Vip Sushi - Osasco",
-    image: require("../assets/vipsushi.png"),
-  },
-  {
-    id: 2,
-    name: "Mc Donalds",
-    image: require("../assets/mcDonalds.png"),
-  },
-  {
-    id: 3,
-    name: "Burguer-King",
-    image: require("../assets/burguerking.png"),
-  },
-];
+const StoresContainer = styled.div`
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 80px auto 20px;
+`;
 
-const Stores = () => {
-  return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Últimas lojas</h2>
-      <div style={styles.storesList}>
-        {storesData.map((store) => (
-          <div key={store.id} style={styles.storeCard}>
-            <img src={store.image} alt={store.name} style={styles.storeImage} />
-            <p style={styles.storeName}>{store.name}</p>
-          </div>
-        ))}
-      </div>
+const Title = styled.h2`
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+`;
 
-      {/* Substituindo <a> por um <button> para evitar o erro */}
-      <button
-        style={styles.viewMore}
-        onClick={() => console.log("Clique em Ver mais")}
-      >
-        Ver mais
-      </button>
-    </div>
-  );
+const StoresList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const StoreCard = styled.div`
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const StoreImage = styled.img`
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+`;
+
+const StoreInfo = styled.div`
+  padding: 15px;
+`;
+
+const StoreName = styled.h3`
+  font-size: 16px;
+  margin: 0;
+  color: #333;
+`;
+
+const StoreAddress = styled.p`
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0 0;
+`;
+
+const EmptyMessage = styled.p`
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  grid-column: 1 / -1;
+`;
+
+export const adicionarLoja = (novaLoja) => {
+  const lojasSalvas = JSON.parse(localStorage.getItem('lojasCadastradas')) || [];
+  const cnpjExistente = lojasSalvas.some(loja => loja.cnpj === novaLoja.cnpj);
+  if (cnpjExistente) {
+    throw new Error('Já existe uma empresa cadastrada com este CNPJ!');
+  }
+  
+  const lojasAtualizadas = [...lojasSalvas, { ...novaLoja, pratos: [] }];
+  localStorage.setItem('lojasCadastradas', JSON.stringify(lojasAtualizadas));
+  return lojasAtualizadas;
 };
 
-const styles = {
-  container: {
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-  },
-  title: {
-    textAlign: "center",
-    fontSize: "24px",
-    fontWeight: "bold",
-    marginBottom: "20px",
-    marginTop: "-10px",
-  },
-  storesList: {
-    display: "flex",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    gap: "20px",
-    marginTop: "-10px",
-  },
-  storeCard: {
-    width: "150px",
-    height: "85px",
-    textAlign: "center",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    padding: "10px",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#fff",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-  },
-  storeImage: {
-    width: "50%",
-    height: "60px",
-    objectFit: "cover",
-    borderRadius: "2px",
-  },
-  storeName: {
-    marginTop: "10px",
-    fontSize: "16px",
-    fontWeight: "bold",
-    color: "#333",
-  },
-  viewMore: {
-    display: "block",
-    textAlign: "center",
-    color: "red",
-    marginTop: "20px",
-    textDecoration: "none",
-    fontWeight: "bold",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "16px",
-  },
+const getLojasComPratos = () => {
+  const lojas = JSON.parse(localStorage.getItem('lojasCadastradas')) || [];
+  return lojas.map(loja => ({
+    ...loja,
+    pratos: loja.pratos || []
+  }));
+};
+
+const Stores = () => {
+  const [lojas, setLojas] = useState([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.success) {
+      alert(location.state.success);
+    }
+    setLojas(getLojasComPratos());
+    
+    const handleStorageChange = () => {
+      setLojas(getLojasComPratos());
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [location.state]);
+
+  return (
+    <StoresContainer>
+      <Title>Lojas Cadastradas</Title>
+      <StoresList>
+        {lojas.length > 0 ? (
+          lojas.map((loja) => (
+            <Link to="/detalhes" state={{ restaurante: loja }} key={loja.id}>
+              <StoreCard>
+                <StoreImage 
+                  src={loja.banner || 'https://via.placeholder.com/250x150?text=Sem+Imagem'} 
+                  alt={loja.nome} 
+                />
+                <StoreInfo>
+                  <StoreName>{loja.nome}</StoreName>
+                </StoreInfo>
+              </StoreCard>
+            </Link>
+          ))
+        ) : (
+          <EmptyMessage>Nenhuma loja cadastrada ainda</EmptyMessage>
+        )}
+      </StoresList>
+    </StoresContainer>
+  );
 };
 
 export default Stores;

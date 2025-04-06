@@ -1,40 +1,18 @@
-import React, { useState, useEffect, useCallback } from "react";
+
+// src/components/Herder/index.js
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
 import { AreaHeader, CartModal, Overlay } from "./styled";
-import { useCarrinho } from "../contexts/CarrinhoContext";
+import { useCarrinho } from '../contexts/CarrinhoContext';
 
 function Header(props) {
   const [address, setAddress] = useState("Obtendo localização...");
   const [cartOpen, setCartOpen] = useState(false);
-  const { carrinho, totalItens, removerDoCarrinho, atualizarQuantidade } =
-    useCarrinho();
+  const { carrinho, totalItens, removerDoCarrinho, atualizarQuantidade } = useCarrinho();
 
-  const getAddressFromCoordinates = async (lat, lon) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
-      );
-      const data = await response.json();
-
-      if (data && data.address) {
-        const { road, city, town, village, state } = data.address;
-        const street = road || "";
-        const cityName = city || town || village || "";
-        setAddress(
-          `${street}${street && cityName ? ", " : ""}${cityName}, ${state}`
-        );
-      } else {
-        setAddress("Endereço não encontrado");
-      }
-    } catch (error) {
-      setAddress("Erro ao obter endereço");
-    }
-  };
-
-  const getLocation = useCallback(() => {
+  useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -50,14 +28,26 @@ function Header(props) {
     }
   }, []);
 
-  useEffect(() => {
-    getLocation();
-  }, [getLocation]);
+  const getAddressFromCoordinates = async (lat, lon) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+      );
+      const data = await response.json();
+
+      if (data && data.address) {
+        const { city, town, village, state } = data.address;
+        setAddress(`${city || town || village}, ${state}`);
+      } else {
+        setAddress("Endereço não encontrado");
+      }
+    } catch (error) {
+      setAddress("Erro ao obter endereço");
+    }
+  };
 
   const calcularTotal = () => {
-    return carrinho
-      .reduce((total, item) => total + item.preco * item.quantidade, 0)
-      .toFixed(2);
+    return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
   };
 
   return (
@@ -81,10 +71,7 @@ function Header(props) {
             <label>{address}</label>
             <img src={props.user.avatar} alt="Usuário" />
             <label>{props.user.name}</label>
-            <div
-              className="cart-icon-container"
-              onClick={() => setCartOpen(true)}
-            >
+            <div className="cart-icon-container" onClick={() => setCartOpen(true)}>
               <ShoppingCartIcon className="carrinho" />
               {totalItens > 0 && (
                 <span className="cart-badge">{totalItens}</span>
@@ -94,47 +81,29 @@ function Header(props) {
         </nav>
       </div>
 
+      {/* Modal do Carrinho */}
       {cartOpen && (
         <>
           <Overlay onClick={() => setCartOpen(false)} />
           <CartModal>
-            <CloseIcon
-              className="close-cart"
-              onClick={() => setCartOpen(false)}
-            />
+            <CloseIcon className="close-cart" onClick={() => setCartOpen(false)} />
             <h3>Seu Carrinho</h3>
-
+            
             {carrinho.length === 0 ? (
               <p>Seu carrinho está vazio</p>
             ) : (
               <>
                 <ul>
-                  {carrinho.map((item) => (
+                  {carrinho.map(item => (
                     <li key={item.id}>
                       <div className="cart-item">
                         <span>{item.nome}</span>
                         <div className="cart-item-controls">
-                          <button
-                            onClick={() =>
-                              atualizarQuantidade(item.id, item.quantidade - 1)
-                            }
-                          >
-                            -
-                          </button>
+                          <button onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}>-</button>
                           <span>{item.quantidade}</span>
-                          <button
-                            onClick={() =>
-                              atualizarQuantidade(item.id, item.quantidade + 1)
-                            }
-                          >
-                            +
-                          </button>
-                          <span>
-                            R$ {(item.preco * item.quantidade).toFixed(2)}
-                          </span>
-                          <button onClick={() => removerDoCarrinho(item.id)}>
-                            ×
-                          </button>
+                          <button onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}>+</button>
+                          <span>R$ {(item.preco * item.quantidade).toFixed(2)}</span>
+                          <button onClick={() => removerDoCarrinho(item.id)}>×</button>
                         </div>
                       </div>
                     </li>
@@ -143,13 +112,10 @@ function Header(props) {
                 <div className="cart-total">
                   <strong>Total: R$ {calcularTotal()}</strong>
                 </div>
-                <button
-                  className="checkout-btn"
-                  onClick={() => {
-                    alert("Pedido finalizado com sucesso!");
-                    setCartOpen(false);
-                  }}
-                >
+                <button className="checkout-btn" onClick={() => {
+                  alert('Pedido finalizado com sucesso!');
+                  setCartOpen(false);
+                }}>
                   Finalizar Pedido
                 </button>
               </>

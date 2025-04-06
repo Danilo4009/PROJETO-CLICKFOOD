@@ -1,54 +1,59 @@
 import styled from 'styled-components';
 
 export const FormContainer = styled.div`
-  background-color: #fff;
-    padding: 30px;
-    max-width: 450px;
-    margin: auto;
-    text-align: center;
-    border-radius: 10px;
-    box-shadow: 0px 0px 5px #ccc;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+`;
+
+export const FormTitle = styled.h2`
+  text-align: center;
+  color: #333;
+  margin-bottom: 1.5rem;
 `;
 
 export const Input = styled.input`
-  color: #3e3e3e;
-            background: transparent;
-            font-weight: 500;
-            outline: none;
-            border: 1px solid #dcdcdc;
-            position: relative;
-            height: auto;
-            z-index: 1;
-            font-size: 1rem;
-            line-height: 20px;
-            width: 100%;
-            box-sizing: border-box;
-            align-items: center;
-            padding: 13px 20px;
-            width: 100%;
-            border-radius: 4px;
-            margin-bottom: 15px;
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+
+  &:focus {
+    border-color: #ea1d2c;
+    outline: none;
+  }
 `;
 
 export const Button = styled.button`
-    align-items: center;
-    padding: 10px;
-    width: 100%;
-    border-radius: 5px;
-    border: 0px;
-    outline: none;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    transition: 0.4s;
-    cursor: pointer;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #ea1d2c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
 
-    &:hover {
-        background-color: #ea1d2c;
-        color: #fff;
-    }
+  &:hover {
+    background-color: #d62828;
+  }
+`;
+
+export const FileInput = styled.input`
+  width: 100%;
+  margin: 1rem 0;
+`;
+
+export const PreviewImage = styled.img`
+  max-width: 100%;
+  max-height: 200px;
+  margin-top: 1rem;
+  border-radius: 4px;
+  display: block;
 `;
