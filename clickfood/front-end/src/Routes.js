@@ -1,21 +1,17 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+
 import Home from './pages/Home';
-import Login from './pages/Login';
-import CadastroRestaurante from './pages/Restaurantes/cadastro';
-import Detalhes from './pages/Restaurantes/Detalhes';
-import Stores from './components/Stores';
+import Restaurantes from './pages/Restaurantes'
 
-const AppRoutes = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<CadastroRestaurante />} />
-      <Route path="/detalhes" element={<Detalhes />} />
-      <Route path="/lojas" element={<Stores />} />
-    </Routes>
-  );
+export default () => {
+    return (
+        <Routes>
+            <Route path="/" element={<Home />} />
+
+            <Route path="/restaurantes" element={<Restaurantes />} />
+            
+            <Route path="/sobre" element={<h1>Sobre</h1>} />
+        </Routes>
+    );
 };
-
-export default AppRoutes;

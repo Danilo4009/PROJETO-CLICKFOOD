@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { CarrinhoProvider } from './components/contexts/CarrinhoContext';
 
 import Header from './components/Herder';
 import Footer from './components/Footer';
-import Login from './pages/Login';
-import AppRoutes from './Routes';
+
+import Login from './pages/Login'
+
+import Routes from './Routes';
+
 import './App.css';
 
-function App() {
+function App(){
+
   const [user, setUser] = useState(null);
 
   const actionLoginDataGoogle = async (u) => {
@@ -21,7 +24,7 @@ function App() {
     setUser(newUser);
   }
 
-  if (user === null) {
+  if(user === null){
     return (
       <Login onReceiveGoogle={actionLoginDataGoogle} />
     );
@@ -29,13 +32,14 @@ function App() {
 
   return (
     <BrowserRouter>
-      <CarrinhoProvider>
-        <Header user={user} />
-        <AppRoutes />
-        <Footer />
-      </CarrinhoProvider>
+      <Header user={user} />
+
+      <Routes />
+
+      <Footer />
+
     </BrowserRouter>
-  );
+  )
 }
 
 export default App;
