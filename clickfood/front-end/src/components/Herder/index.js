@@ -1,12 +1,16 @@
+
+// src/components/Herder/index.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
-import { AreaHeader, CartOverlay } from "./styled";
+import { AreaHeader, CartModal, Overlay } from "./styled";
+import { useCarrinho } from '../contexts/CarrinhoContext';
 
 function Header(props) {
-  const [cartOpen, setCartOpen] = useState(false);
   const [address, setAddress] = useState("Obtendo localização...");
+  const [cartOpen, setCartOpen] = useState(false);
+  const { carrinho, totalItens, removerDoCarrinho, atualizarQuantidade } = useCarrinho();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -32,15 +36,8 @@ function Header(props) {
       const data = await response.json();
 
       if (data && data.address) {
-        const { road, city, town, village, state } = data.address;
-        // Monta o endereço com rua, cidade e estado
-        const street = road || ""; // Se não houver rua, fica vazio
-        const cityName = city || town || village || ""; // Pega o nome da cidade/town/village
-
-        // Remove vírgula extra se não houver rua
-        setAddress(
-          `${street}${street && cityName ? ", " : ""}${cityName}, ${state}`
-        );
+        const { city, town, village, state } = data.address;
+        setAddress(`${city || town || village}, ${state}`);
       } else {
         setAddress("Endereço não encontrado");
       }
@@ -49,8 +46,8 @@ function Header(props) {
     }
   };
 
-  const toggleCart = () => {
-    setCartOpen(!cartOpen);
+  const calcularTotal = () => {
+    return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
   };
 
   return (
@@ -66,35 +63,66 @@ function Header(props) {
               <Link to="/">Início</Link>
             </li>
             <li>
-              <Link to="/restaurantes">Cadastrar Loja</Link>
+              <Link to="/cadastro">Cadastrar Loja</Link>
             </li>
           </ul>
 
           <div className="avatar">
-            <label>{address}</label> {/* Exibe o endereço do usuário */}
+            <label>{address}</label>
             <img src={props.user.avatar} alt="Usuário" />
             <label>{props.user.name}</label>
-            <ShoppingCartIcon className="carrinho" onClick={toggleCart} />
+            <div className="cart-icon-container" onClick={() => setCartOpen(true)}>
+              <ShoppingCartIcon className="carrinho" />
+              {totalItens > 0 && (
+                <span className="cart-badge">{totalItens}</span>
+              )}
+            </div>
           </div>
         </nav>
       </div>
 
-      {/* Carrinho de Compras */}
-      <CartOverlay open={cartOpen}>
-        <CloseIcon className="close-cart" onClick={toggleCart} />
-        <h3>Seu Carrinho</h3>
-        <ul>
-          <li>
-            🍔 X-Burguer <span>R$20,00</span>
-          </li>
-          <li>
-            🍟 Batata Frita <span>R$10,00</span>
-          </li>
-        </ul>
-        <button className="checkout-btn" onClick={toggleCart}>
-          Finalizar Pedido
-        </button>
-      </CartOverlay>
+      {/* Modal do Carrinho */}
+      {cartOpen && (
+        <>
+          <Overlay onClick={() => setCartOpen(false)} />
+          <CartModal>
+            <CloseIcon className="close-cart" onClick={() => setCartOpen(false)} />
+            <h3>Seu Carrinho</h3>
+            
+            {carrinho.length === 0 ? (
+              <p>Seu carrinho está vazio</p>
+            ) : (
+              <>
+                <ul>
+                  {carrinho.map(item => (
+                    <li key={item.id}>
+                      <div className="cart-item">
+                        <span>{item.nome}</span>
+                        <div className="cart-item-controls">
+                          <button onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}>-</button>
+                          <span>{item.quantidade}</span>
+                          <button onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}>+</button>
+                          <span>R$ {(item.preco * item.quantidade).toFixed(2)}</span>
+                          <button onClick={() => removerDoCarrinho(item.id)}>×</button>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="cart-total">
+                  <strong>Total: R$ {calcularTotal()}</strong>
+                </div>
+                <button className="checkout-btn" onClick={() => {
+                  alert('Pedido finalizado com sucesso!');
+                  setCartOpen(false);
+                }}>
+                  Finalizar Pedido
+                </button>
+              </>
+            )}
+          </CartModal>
+        </>
+      )}
     </AreaHeader>
   );
 }

@@ -1,16 +1,24 @@
+// src/components/Herder/styled.js
 import styled from "styled-components";
 
 export const AreaHeader = styled.div`
   padding: 10px 20px;
   background-color: #fff;
   border-bottom: 1px solid #ccc;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
 
   .container {
     padding: 5px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
   }
+  
   .logo img {
     height: 20px;
   }
@@ -23,7 +31,10 @@ export const AreaHeader = styled.div`
 
     ul {
       display: flex;
+      padding: 0;
+      margin: 0;
     }
+    
     li {
       list-style: none;
       margin-left: 20px;
@@ -57,16 +68,37 @@ export const AreaHeader = styled.div`
         color: #000000;
       }
 
+      .cart-icon-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin-left: 20px;
+      }
+
       .carrinho {
         color: #ea1d2c;
-        margin-left: 20px;
-        cursor: pointer;
         font-size: 28px;
         transition: 0.3s;
 
         &:hover {
           color: #d62828;
         }
+      }
+
+      .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #ea1d2c;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
       }
 
       @media screen and (max-width: 600px) {
@@ -78,65 +110,128 @@ export const AreaHeader = styled.div`
   }
 `;
 
-// Estilização do Carrinho
-export const CartOverlay = styled.div`
+export const Overlay = styled.div`
   position: fixed;
   top: 0;
-  right: ${(props) => (props.open ? "0" : "-320px")};
-  width: 300px;
-  height: 100vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1001;
+`;
+
+export const CartModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
   background: white;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
   padding: 20px;
-  z-index: 1000;
+  z-index: 1002;
   display: flex;
   flex-direction: column;
-  transition: right 0.3s ease-in-out;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+
+  .close-cart {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    color: #666;
+    
+    &:hover {
+      color: #333;
+    }
+  }
 
   h3 {
-    margin-bottom: 15px;
     color: #ea1d2c;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  p {
+    text-align: center;
+    color: #666;
   }
 
   ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
 
-    li {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+  li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .cart-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    button {
+      background: #f0f0f0;
+      border: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 4px;
+      cursor: pointer;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: center;
+      
+      &:hover {
+        background: #e0e0e0;
+      }
+      
+      &:last-child {
+        color: #ff0000;
+        background: transparent;
+        font-size: 18px;
+      }
+    }
+    
+    span {
+      min-width: 20px;
+      text-align: center;
     }
   }
 
-  .close-cart {
-    align-self: flex-end;
-    cursor: pointer;
-    font-size: 24px;
-    color: #ea1d2c;
-    transition: 0.3s;
-
-    &:hover {
-      color: #d62828;
-    }
+  .cart-total {
+    margin: 20px 0;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    text-align: right;
+    font-size: 1.2rem;
   }
 
   .checkout-btn {
-    margin-top: -10px; /* Ajuste conforme necessário */
-    background: rgb(234, 29, 29);
+    background: #4CAF50;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     cursor: pointer;
-    margin-top: 0;
-    text-align: center;
     font-size: 16px;
+    border-radius: 4px;
     transition: 0.3s;
+    margin-top: 10px;
 
     &:hover {
-      background: #d62828;
+      background: #388E3C;
     }
   }
 `;
