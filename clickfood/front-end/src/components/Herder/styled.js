@@ -1,31 +1,36 @@
-// src/components/Herder/styled.js
+// src/components/Header/styled.js
 import styled from "styled-components";
 
 export const AreaHeader = styled.div`
-  padding: 10px 20px;
+  padding: 10px 0;
   background-color: #fff;
   border-bottom: 1px solid #ccc;
   position: fixed;
   top: 0;
-  width: 100%;
+  width: 100vw;
+  left: 0;
   z-index: 1000;
+  box-sizing: border-box;
 
   .container {
-    padding: 5px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
   }
-  
-  .logo img {
-    height: 20px;
+
+  .logo {
+    img {
+      height: 20px;
+    }
   }
 
   nav {
     display: flex;
-    flex: 1;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
 
@@ -33,17 +38,18 @@ export const AreaHeader = styled.div`
       display: flex;
       padding: 0;
       margin: 0;
-    }
-    
-    li {
       list-style: none;
-      margin-left: 20px;
+      gap: 30px;
+      margin-left: 40px;
+    }
 
+    li {
       a {
         text-decoration: none;
         color: #000000;
         font-weight: bold;
-
+        white-space: nowrap;
+        
         &:hover {
           color: #ea1d2c;
         }
@@ -53,57 +59,71 @@ export const AreaHeader = styled.div`
     .avatar {
       display: flex;
       align-items: center;
+      gap: 20px;
+      margin-left: auto;
+
+      .location {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #000000;
+        font-size: 14px;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        
+        span {
+          font-size: 14px;
+        }
+      }
 
       img {
         width: 35px;
         border-radius: 20px;
-        margin-left: 20px;
-        margin-right: 10px;
         cursor: pointer;
-      }
-
-      label {
-        font-size: 14px;
-        cursor: pointer;
-        color: #000000;
       }
 
       .cart-icon-container {
         position: relative;
-        display: flex;
-        align-items: center;
         cursor: pointer;
         margin-left: 20px;
-      }
 
-      .carrinho {
-        color: #ea1d2c;
-        font-size: 28px;
-        transition: 0.3s;
+        .carrinho {
+          color: #ea1d2c;
+          font-size: 26px;
+          transition: 0.3s;
+          
+          &:hover {
+            color: #d62828;
+          }
+        }
 
-        &:hover {
-          color: #d62828;
+        .cart-badge {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          background-color: #ea1d2c;
+          color: white;
+          border-radius: 50%;
+          width: 18px;
+          height: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.7rem;
         }
       }
 
-      .cart-badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background-color: #ea1d2c;
-        color: white;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-      }
-
       @media screen and (max-width: 600px) {
-        label {
+        .location, .user-info span {
           display: none;
+        }
+
+        .cart-icon-container {
+          margin-left: 10px;
         }
       }
     }
@@ -114,27 +134,27 @@ export const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.5);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1001;
 `;
 
-export const CartModal = styled.div`
+export const CartPanel = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 400px;
-  max-height: 80vh;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 85vh;
   background: white;
-  border-radius: 8px;
   padding: 20px;
   z-index: 1002;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+  transform: ${({ $isOpen }) => ($isOpen ? "translateX(0)" : "translateX(100%)")};
+  transition: transform 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  border-radius: 0 0 0 12px;
 
   .close-cart {
     position: absolute;
@@ -182,7 +202,8 @@ export const CartModal = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    
+    flex-wrap: wrap;
+
     button {
       background: #f0f0f0;
       border: none;
@@ -193,18 +214,18 @@ export const CartModal = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      
+
       &:hover {
         background: #e0e0e0;
       }
-      
+
       &:last-child {
         color: #ff0000;
         background: transparent;
         font-size: 18px;
       }
     }
-    
+
     span {
       min-width: 20px;
       text-align: center;
@@ -216,22 +237,22 @@ export const CartModal = styled.div`
     padding-top: 10px;
     border-top: 1px solid #eee;
     text-align: right;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .checkout-btn {
-    background: #4CAF50;
+    background: #4caf50;
     color: white;
     border: none;
-    padding: 12px;
+    padding: 10px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     border-radius: 4px;
     transition: 0.3s;
     margin-top: 10px;
 
     &:hover {
-      background: #388E3C;
+      background: #388e3c;
     }
   }
 `;

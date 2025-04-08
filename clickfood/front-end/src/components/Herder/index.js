@@ -1,11 +1,10 @@
-
 // src/components/Herder/index.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
-import { AreaHeader, CartModal, Overlay } from "./styled";
-import { useCarrinho } from '../contexts/CarrinhoContext';
+import { AreaHeader, CartPanel, Overlay } from "./styled";
+import { useCarrinho } from "../contexts/CarrinhoContext";
 
 function Header(props) {
   const [address, setAddress] = useState("Obtendo localização...");
@@ -47,7 +46,7 @@ function Header(props) {
   };
 
   const calcularTotal = () => {
-    return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
+    return carrinho.reduce((total, item) => total + item.preco * item.quantidade, 0).toFixed(2);
   };
 
   return (
@@ -81,48 +80,44 @@ function Header(props) {
         </nav>
       </div>
 
-      {/* Modal do Carrinho */}
-      {cartOpen && (
-        <>
-          <Overlay onClick={() => setCartOpen(false)} />
-          <CartModal>
-            <CloseIcon className="close-cart" onClick={() => setCartOpen(false)} />
-            <h3>Seu Carrinho</h3>
-            
-            {carrinho.length === 0 ? (
-              <p>Seu carrinho está vazio</p>
-            ) : (
-              <>
-                <ul>
-                  {carrinho.map(item => (
-                    <li key={item.id}>
-                      <div className="cart-item">
-                        <span>{item.nome}</span>
-                        <div className="cart-item-controls">
-                          <button onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}>-</button>
-                          <span>{item.quantidade}</span>
-                          <button onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}>+</button>
-                          <span>R$ {(item.preco * item.quantidade).toFixed(2)}</span>
-                          <button onClick={() => removerDoCarrinho(item.id)}>×</button>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <div className="cart-total">
-                  <strong>Total: R$ {calcularTotal()}</strong>
-                </div>
-                <button className="checkout-btn" onClick={() => {
-                  alert('Pedido finalizado com sucesso!');
-                  setCartOpen(false);
-                }}>
-                  Finalizar Pedido
-                </button>
-              </>
-            )}
-          </CartModal>
-        </>
-      )}
+      {cartOpen && <Overlay onClick={() => setCartOpen(false)} />}
+
+      <CartPanel $isOpen={cartOpen}>
+        <CloseIcon className="close-cart" onClick={() => setCartOpen(false)} />
+        <h3>Seu Carrinho</h3>
+
+        {carrinho.length === 0 ? (
+          <p>Seu carrinho está vazio</p>
+        ) : (
+          <>
+            <ul>
+              {carrinho.map((item) => (
+                <li key={item.id}>
+                  <div className="cart-item">
+                    <span>{item.nome}</span>
+                    <div className="cart-item-controls">
+                      <button onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}>-</button>
+                      <span>{item.quantidade}</span>
+                      <button onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}>+</button>
+                      <span>R$ {(item.preco * item.quantidade).toFixed(2)}</span>
+                      <button onClick={() => removerDoCarrinho(item.id)}>×</button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="cart-total">
+              <strong>Total: R$ {calcularTotal()}</strong>
+            </div>
+            <button className="checkout-btn" onClick={() => {
+              alert("Pedido finalizado com sucesso!");
+              setCartOpen(false);
+            }}>
+              Finalizar Pedido
+            </button>
+          </>
+        )}
+      </CartPanel>
     </AreaHeader>
   );
 }
