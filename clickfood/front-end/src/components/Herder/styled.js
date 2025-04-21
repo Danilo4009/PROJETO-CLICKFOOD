@@ -1,4 +1,3 @@
-// src/components/Header/styled.js
 import styled from "styled-components";
 
 export const AreaHeader = styled.div`
@@ -59,37 +58,19 @@ export const AreaHeader = styled.div`
     .avatar {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 15px;
       margin-left: auto;
 
-      .location {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        color: #000000;
+      label {
         font-size: 14px;
-      }
-
-      .user-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        
-        span {
-          font-size: 14px;
-        }
-      }
-
-      img {
-        width: 35px;
-        border-radius: 20px;
-        cursor: pointer;
+        color: #000000;
+        white-space: nowrap;
       }
 
       .cart-icon-container {
         position: relative;
         cursor: pointer;
-        margin-left: 20px;
+        margin-left: 15px;
 
         .carrinho {
           color: #ea1d2c;
@@ -118,12 +99,10 @@ export const AreaHeader = styled.div`
       }
 
       @media screen and (max-width: 600px) {
-        .location, .user-info span {
+        gap: 10px;
+        
+        label:first-child {
           display: none;
-        }
-
-        .cart-icon-container {
-          margin-left: 10px;
         }
       }
     }

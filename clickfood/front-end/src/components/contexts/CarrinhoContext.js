@@ -8,16 +8,14 @@ export const CarrinhoProvider = ({ children }) => {
   const adicionarAoCarrinho = (prato) => {
     setCarrinho(prev => {
       const existeNoCarrinho = prev.find(item => item.id === prato.id);
-      
       if (existeNoCarrinho) {
         return prev.map(item =>
           item.id === prato.id 
             ? { ...item, quantidade: item.quantidade + 1 }
             : item
         );
-      } else {
-        return [...prev, { ...prato, quantidade: 1 }];
       }
+      return [...prev, { ...prato, quantidade: 1 }];
     });
   };
 
@@ -30,19 +28,18 @@ export const CarrinhoProvider = ({ children }) => {
       removerDoCarrinho(id);
       return;
     }
-
     setCarrinho(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, quantidade } : item
-      )
+      prev.map(item => item.id === id ? { ...item, quantidade } : item)
     );
   };
 
-  const limparCarrinho = () => {
-    setCarrinho([]);
-  };
+  const limparCarrinho = () => setCarrinho([]);
 
   const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+
+  const calcularTotal = () => {
+    return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+  };
 
   return (
     <CarrinhoContext.Provider
@@ -52,7 +49,8 @@ export const CarrinhoProvider = ({ children }) => {
         adicionarAoCarrinho,
         removerDoCarrinho,
         atualizarQuantidade,
-        limparCarrinho
+        limparCarrinho,
+        calcularTotal
       }}
     >
       {children}
@@ -60,6 +58,4 @@ export const CarrinhoProvider = ({ children }) => {
   );
 };
 
-export const useCarrinho = () => {
-  return useContext(CarrinhoContext);
-};
+export const useCarrinho = () => useContext(CarrinhoContext);

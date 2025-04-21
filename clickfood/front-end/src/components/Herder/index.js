@@ -1,6 +1,5 @@
-// src/components/Herder/index.js
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import { AreaHeader, CartPanel, Overlay } from "./styled";
@@ -9,7 +8,8 @@ import { useCarrinho } from "../contexts/CarrinhoContext";
 function Header(props) {
   const [address, setAddress] = useState("Obtendo localização...");
   const [cartOpen, setCartOpen] = useState(false);
-  const { carrinho, totalItens, removerDoCarrinho, atualizarQuantidade } = useCarrinho();
+  const { carrinho, totalItens, removerDoCarrinho, atualizarQuantidade, calcularTotal } = useCarrinho();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -45,10 +45,6 @@ function Header(props) {
     }
   };
 
-  const calcularTotal = () => {
-    return carrinho.reduce((total, item) => total + item.preco * item.quantidade, 0).toFixed(2);
-  };
-
   return (
     <AreaHeader>
       <div className="container">
@@ -68,7 +64,6 @@ function Header(props) {
 
           <div className="avatar">
             <label>{address}</label>
-            <img src={props.user.avatar} alt="Usuário" />
             <label>{props.user.name}</label>
             <div className="cart-icon-container" onClick={() => setCartOpen(true)}>
               <ShoppingCartIcon className="carrinho" />
@@ -107,12 +102,16 @@ function Header(props) {
               ))}
             </ul>
             <div className="cart-total">
-              <strong>Total: R$ {calcularTotal()}</strong>
+              <strong>Total: R$ {calcularTotal().toFixed(2)}</strong>
             </div>
-            <button className="checkout-btn" onClick={() => {
-              alert("Pedido finalizado com sucesso!");
-              setCartOpen(false);
-            }}>
+            <button 
+              className="checkout-btn" 
+              onClick={() => {
+                if (carrinho.length === 0) return;
+                setCartOpen(false);
+                navigate('/pagamento');
+              }}
+            >
               Finalizar Pedido
             </button>
           </>
