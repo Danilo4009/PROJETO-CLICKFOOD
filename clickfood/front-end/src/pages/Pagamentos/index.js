@@ -33,8 +33,33 @@ export default function Pagamentos() {
     cvv: ''
   });
 
-  const handlePagamento = () => {
+  const handlePagamento = async () => {
     alert(`Pagamento via ${metodoPagamento} confirmado!`);
+
+    const usuario = JSON.parse(localStorage.getItem("user"));
+    if (!usuario || !usuario.email) {
+      alert("Usuário não logado ou e-mail não encontrado.");
+      return;
+    }
+
+    const response = await fetch('http://localhost:3000/enviar-nota', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        carrinho,
+        total: calcularTotal(),
+        email: usuario.email
+      })
+    });
+
+    const data = await response.json();
+    if (data.status === 'ok') {
+      alert('Nota fiscal enviada com sucesso para seu e-mail!');
+    } else {
+      alert('Erro ao enviar a nota fiscal.');
+    }
   };
 
   const handleChangeCartao = (e) => {
@@ -91,47 +116,9 @@ export default function Pagamentos() {
             </PixContainer>
           )}
 
-          {metodoPagamento === 'credito' && (
+          {(metodoPagamento === 'credito' || metodoPagamento === 'debito') && (
             <CartaoContainer>
-              <h3>Cartão de Crédito</h3>
-              <Input
-                type="text"
-                name="numero"
-                placeholder="Número do Cartão"
-                value={dadosCartao.numero}
-                onChange={handleChangeCartao}
-              />
-              <Input
-                type="text"
-                name="nome"
-                placeholder="Nome no Cartão"
-                value={dadosCartao.nome}
-                onChange={handleChangeCartao}
-              />
-              <RowInputs>
-                <Input
-                  type="text"
-                  name="validade"
-                  placeholder="MM/AA"
-                  value={dadosCartao.validade}
-                  onChange={handleChangeCartao}
-                  $width="48%"
-                />
-                <Input
-                  type="text"
-                  name="cvv"
-                  placeholder="CVV"
-                  value={dadosCartao.cvv}
-                  onChange={handleChangeCartao}
-                  $width="48%"
-                />
-              </RowInputs>
-            </CartaoContainer>
-          )}
-
-          {metodoPagamento === 'debito' && (
-            <CartaoContainer>
-              <h3>Cartão de Débito</h3>
+              <h3>{metodoPagamento === 'credito' ? 'Cartão de Crédito' : 'Cartão de Débito'}</h3>
               <Input
                 type="text"
                 name="numero"
