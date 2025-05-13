@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FormContainer, Input, Button, FileInput, PreviewImage, FormTitle } from './syled';
+import { FormContainer, Input, Button, FileInput, PreviewImage, FormTitle } from './styled.cadastro';
 import { adicionarLoja } from '../../components/Stores';
 
 const CadastroRestaurante = () => {
