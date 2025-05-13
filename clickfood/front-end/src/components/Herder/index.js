@@ -8,7 +8,13 @@ import { useCarrinho } from "../contexts/CarrinhoContext";
 function Header(props) {
   const [address, setAddress] = useState("Obtendo localização...");
   const [cartOpen, setCartOpen] = useState(false);
-  const { carrinho, totalItens, removerDoCarrinho, atualizarQuantidade, calcularTotal } = useCarrinho();
+  const {
+    carrinho,
+    totalItens,
+    removerDoCarrinho,
+    atualizarQuantidade,
+    calcularTotal,
+  } = useCarrinho();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,12 +66,18 @@ function Header(props) {
             <li>
               <Link to="/cadastro">Cadastrar Loja</Link>
             </li>
+            <li>
+              <Link to="/lojas">Lojas</Link>
+            </li>
           </ul>
 
           <div className="avatar">
             <label>{address}</label>
             <label>{props.user.name}</label>
-            <div className="cart-icon-container" onClick={() => setCartOpen(true)}>
+            <div
+              className="cart-icon-container"
+              onClick={() => setCartOpen(true)}
+            >
               <ShoppingCartIcon className="carrinho" />
               {totalItens > 0 && (
                 <span className="cart-badge">{totalItens}</span>
@@ -91,11 +103,27 @@ function Header(props) {
                   <div className="cart-item">
                     <span>{item.nome}</span>
                     <div className="cart-item-controls">
-                      <button onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}>-</button>
+                      <button
+                        onClick={() =>
+                          atualizarQuantidade(item.id, item.quantidade - 1)
+                        }
+                      >
+                        -
+                      </button>
                       <span>{item.quantidade}</span>
-                      <button onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}>+</button>
-                      <span>R$ {(item.preco * item.quantidade).toFixed(2)}</span>
-                      <button onClick={() => removerDoCarrinho(item.id)}>×</button>
+                      <button
+                        onClick={() =>
+                          atualizarQuantidade(item.id, item.quantidade + 1)
+                        }
+                      >
+                        +
+                      </button>
+                      <span>
+                        R$ {(item.preco * item.quantidade).toFixed(2)}
+                      </span>
+                      <button onClick={() => removerDoCarrinho(item.id)}>
+                        ×
+                      </button>
                     </div>
                   </div>
                 </li>
@@ -104,12 +132,12 @@ function Header(props) {
             <div className="cart-total">
               <strong>Total: R$ {calcularTotal().toFixed(2)}</strong>
             </div>
-            <button 
-              className="checkout-btn" 
+            <button
+              className="checkout-btn"
               onClick={() => {
                 if (carrinho.length === 0) return;
                 setCartOpen(false);
-                navigate('/pagamento');
+                navigate("/pagamento");
               }}
             >
               Finalizar Pedido
