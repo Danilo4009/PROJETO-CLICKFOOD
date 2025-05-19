@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   max-width: 1200px;
   margin: 2rem auto;
   padding: 1rem;
-  font-family: 'Arial, sans-serif';
+  font-family: "Arial, sans-serif";
 `;
 
 export const Title = styled.h1`
@@ -24,16 +24,16 @@ export const MethodsContainer = styled.div`
   background: #fff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 
 export const MethodButton = styled.button`
   width: 100%;
   padding: 1rem;
   margin: 0.5rem 0;
-  border: 2px solid ${props => props.$selected ? '#ff6b00' : '#eee'};
+  border: 2px solid ${(props) => (props.$selected ? "#ff6b00" : "#eee")};
   border-radius: 8px;
-  background: ${props => props.$selected ? '#fff8f2' : '#fff'};
+  background: ${(props) => (props.$selected ? "#fff8f2" : "#fff")};
   cursor: pointer;
   text-align: left;
   font-size: 1rem;
@@ -49,7 +49,7 @@ export const PaymentDetails = styled.div`
   background: #fff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   min-height: 300px;
 `;
 
@@ -96,7 +96,7 @@ export const Input = styled.input`
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
-  width: ${props => props.$width || '100%'};
+  width: ${(props) => props.$width || "100%"};
 `;
 
 export const RowInputs = styled.div`
@@ -123,7 +123,7 @@ export const Summary = styled.div`
   background: #f9f9f9;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 
 export const Item = styled.div`

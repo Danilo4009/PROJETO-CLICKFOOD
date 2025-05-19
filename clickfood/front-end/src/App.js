@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { CarrinhoProvider } from './components/contexts/CarrinhoContext';
+import React, { useState } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { CarrinhoProvider } from "./components/contexts/CarrinhoContext";
 
-import Header from './components/Herder';
-import Footer from './components/Footer';
-import Login from './pages/Login';
-import AppRoutes from './Routes';
-import './App.css';
+import Header from "./components/Herder";
+import Footer from "./components/Footer";
+import Login from "./pages/Login";
+import AppRoutes from "./Routes";
+import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -15,16 +15,14 @@ function App() {
     let newUser = {
       id: u.uid,
       name: u.displayName,
-      avatar: u.photoURL
-    }
+      avatar: u.photoURL,
+    };
 
     setUser(newUser);
-  }
+  };
 
   if (user === null) {
-    return (
-      <Login onReceiveGoogle={actionLoginDataGoogle} />
-    );
+    return <Login onReceiveGoogle={actionLoginDataGoogle} />;
   }
 
   return (
