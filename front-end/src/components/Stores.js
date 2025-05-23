@@ -1,5 +1,7 @@
+// src/components/Stores.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Stores = () => {
   const [restaurantes, setRestaurantes] = useState([]);
@@ -13,16 +15,22 @@ const Stores = () => {
   return (
     <div style={styles.container}>
       {restaurantes.map((restaurante) => (
-        <div key={restaurante.id} style={styles.card}>
-          {restaurante.imagem && (
-            <img
-              src={restaurante.imagem}
-              alt={`Logo de ${restaurante.name}`}
-              style={styles.image}
-            />
-          )}
-          <p>{restaurante.name}</p>
-        </div>
+        <Link 
+          to={`/cadastrar-prato/${restaurante.id}`} 
+          key={restaurante.id} 
+          style={{ textDecoration: 'none' }}
+        >
+          <div style={styles.card}>
+            {restaurante.imagem && (
+              <img
+                src={restaurante.imagem}
+                alt={`Logo de ${restaurante.name}`}
+                style={styles.image}
+              />
+            )}
+            <p>{restaurante.name}</p>
+          </div>
+        </Link>
       ))}
     </div>
   );
@@ -43,6 +51,11 @@ const styles = {
     width: "150px",
     textAlign: "center",
     backgroundColor: "#f9f9f9",
+    transition: "0.3s",
+    "&:hover": {
+      transform: "scale(1.05)",
+      boxShadow: "0px 0px 10px rgba(0,0,0,0.1)"
+    }
   },
   image: {
     width: "100%",

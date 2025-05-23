@@ -30,5 +30,12 @@ model Restaurante {
   imagem    Bytes?   
 }
 
-
-
+model Prato {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome         String
+  preco        Float
+  descricao    String
+  imagem       Bytes?
+  restaurante  Restaurante @relation(fields: [restauranteId], references: [id])
+  restauranteId String    @db.ObjectId
+}

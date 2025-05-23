@@ -155,9 +155,81 @@ app.get("/restaurantes", async (req, res) => {
   }
 });
 
+// Cadastro de prato
+app.post("/cadastrar-prato", upload.single("imagem"), async (req, res) => {
+  try {
+    const { nome, preco, descricao, restauranteId } = req.body;
+    const imagemBuffer = req.file ? req.file.buffer : null;
 
+    const novoPrato = await prisma.prato.create({
+      data: {
+        nome,
+        preco: parseFloat(preco),
+        descricao,
+        imagem: imagemBuffer,
+        restauranteId,
+      },
+    });
 
+    res.status(201).json({ success: true, dish: novoPrato });
+  } catch (error) {
+    console.error("Erro ao cadastrar prato:", error);
+    res.status(500).json({ success: false, message: "Erro ao cadastrar o prato." });
+  }
+});
 
+// Listar pratos
+app.get("/pratos", async (req, res) => {
+  try {
+    const pratos = await prisma.prato.findMany();
+
+    const pratosComImagem = pratos.map((prato) => ({
+      ...prato,
+      imagem: prato.imagem ? `data:image/png;base64,${prato.imagem.toString("base64")}` : null,
+    }));
+
+    res.json(pratosComImagem);
+  } catch (error) {
+    console.error("Erro ao listar pratos:", error);
+    res.status(500).json({ error: "Erro ao listar pratos" });
+  }
+});
+
+// Editar prato
+app.put("/editar-prato/:id", upload.single("imagem"), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, preco, descricao } = req.body;
+    const imagemBuffer = req.file ? req.file.buffer : null;
+
+    const pratoAtualizado = await prisma.prato.update({
+      where: { id: parseInt(id) },
+      data: {
+        nome,
+        preco: parseFloat(preco),
+        descricao,
+        ...(imagemBuffer && { imagem: imagemBuffer }),
+      },
+    });
+
+    res.json({ success: true, prato: pratoAtualizado });
+  } catch (error) {
+    console.error("Erro ao editar prato:", error);
+    res.status(500).json({ success: false, message: "Erro ao editar o prato." });
+  }
+});
+
+// Excluir prato
+app.delete("/excluir-prato/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.prato.delete({ where: { id: parseInt(id) } });
+    res.json({ success: true, message: "Prato excluído com sucesso." });
+  } catch (error) {
+    console.error("Erro ao excluir prato:", error);
+    res.status(500).json({ success: false, message: "Erro ao excluir o prato." });
+  }
+});
 
 // Enviar nota fiscal por e-mail
 app.post("/enviar-nota", async (req, res) => {
