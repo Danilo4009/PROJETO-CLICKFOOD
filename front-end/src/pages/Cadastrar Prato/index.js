@@ -1,6 +1,5 @@
-// src/pages/CadastrarPrato/index.js
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FaCheck, FaTimes, FaImage, FaTrash, FaEdit } from 'react-icons/fa';
 import {
   Container,
@@ -22,9 +21,13 @@ import {
   ImageUploadButton
 } from './styled';
 
+import { useCarrinho } from '../../components/contexts/CarrinhoContext';
+
 const CadastrarPrato = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+
+  // Pega o contexto do carrinho
+  const { adicionarAoCarrinho } = useCarrinho();
 
   const [restaurant, setRestaurant] = useState({
     nome: '',
@@ -156,6 +159,12 @@ const CadastrarPrato = () => {
     }
   };
 
+  // ** FUNÇÃO DE ADICIONAR AO CARRINHO usa o contexto **
+  const handleAdicionarAoCarrinho = (prato) => {
+    adicionarAoCarrinho(prato);
+    alert(`${prato.nome} foi adicionado ao carrinho!`);
+  };
+
   return (
     <Container>
       <Header>
@@ -212,6 +221,9 @@ const CadastrarPrato = () => {
               </button>
               <button onClick={() => handleDeleteDish(dish.id)}>
                 <FaTrash /> Excluir
+              </button>
+              <button onClick={() => handleAdicionarAoCarrinho(dish)}>
+                🛒 Adicionar ao Carrinho
               </button>
             </ActionButtons>
           </DishCard>

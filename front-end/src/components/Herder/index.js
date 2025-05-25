@@ -77,6 +77,7 @@ function Header(props) {
             <div
               className="cart-icon-container"
               onClick={() => setCartOpen(true)}
+              style={{ cursor: "pointer", position: "relative" }}
             >
               <ShoppingCartIcon className="carrinho" />
               {totalItens > 0 && (

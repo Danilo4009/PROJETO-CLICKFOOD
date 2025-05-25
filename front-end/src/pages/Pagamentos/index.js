@@ -236,7 +236,9 @@ export default function Pagamentos() {
                 <PixContainer>
                   <h3>Pagamento via PIX</h3>
                   <QrCodePlaceholder>
-                    <QrCode>QR CODE</QrCode>
+                    <QrCode>
+                      <img src="../../../qrcode.png" alt="Logo" />
+                    </QrCode>
                     <p>Escaneie o QR Code com seu app bancário</p>
                   </QrCodePlaceholder>
                   <PixCode>Chave PIX: 123.456.789-09</PixCode>

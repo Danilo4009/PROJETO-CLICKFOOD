@@ -1,26 +1,33 @@
-import { createContext, useState, useContext } from 'react';
+// src/contexts/CarrinhoContext.js
+import React, { createContext, useContext, useState } from "react";
 
 const CarrinhoContext = createContext();
 
-export const CarrinhoProvider = ({ children }) => {
+export function useCarrinho() {
+  return useContext(CarrinhoContext);
+}
+
+export function CarrinhoProvider({ children }) {
   const [carrinho, setCarrinho] = useState([]);
 
-  const adicionarAoCarrinho = (prato) => {
-    setCarrinho(prev => {
-      const existeNoCarrinho = prev.find(item => item.id === prato.id);
-      if (existeNoCarrinho) {
-        return prev.map(item =>
-          item.id === prato.id 
+  const adicionarAoCarrinho = (produto) => {
+    setCarrinho((prev) => {
+      const itemExistente = prev.find((item) => item.id === produto.id);
+      if (itemExistente) {
+        // Atualiza quantidade
+        return prev.map((item) =>
+          item.id === produto.id
             ? { ...item, quantidade: item.quantidade + 1 }
             : item
         );
       }
-      return [...prev, { ...prato, quantidade: 1 }];
+      // Adiciona produto novo com quantidade 1
+      return [...prev, { ...produto, quantidade: 1 }];
     });
   };
 
   const removerDoCarrinho = (id) => {
-    setCarrinho(prev => prev.filter(item => item.id !== id));
+    setCarrinho((prev) => prev.filter((item) => item.id !== id));
   };
 
   const atualizarQuantidade = (id, quantidade) => {
@@ -28,34 +35,34 @@ export const CarrinhoProvider = ({ children }) => {
       removerDoCarrinho(id);
       return;
     }
-    setCarrinho(prev =>
-      prev.map(item => item.id === id ? { ...item, quantidade } : item)
+    setCarrinho((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantidade } : item
+      )
     );
   };
 
-  const limparCarrinho = () => setCarrinho([]);
-
-  const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+  const totalItens = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
 
   const calcularTotal = () => {
-    return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+    return carrinho.reduce(
+      (acc, item) => acc + item.preco * item.quantidade,
+      0
+    );
   };
 
   return (
     <CarrinhoContext.Provider
       value={{
         carrinho,
-        totalItens,
         adicionarAoCarrinho,
         removerDoCarrinho,
         atualizarQuantidade,
-        limparCarrinho,
-        calcularTotal
+        totalItens,
+        calcularTotal,
       }}
     >
       {children}
     </CarrinhoContext.Provider>
   );
-};
-
-export const useCarrinho = () => useContext(CarrinhoContext);
+}
