@@ -1,8 +1,8 @@
-// src/pages/Cadastrar Prato/index.js
-import React, { useState, useCallback, useEffect } from 'react';
+// src/pages/CadastrarPrato/index.js
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaCheck, FaTimes, FaImage, FaTrash, FaEdit } from 'react-icons/fa';
-import { 
+import {
   Container,
   Header,
   RestaurantHeader,
@@ -14,9 +14,9 @@ import {
   DishInfo,
   ActionButtons,
   CompactForm,
-  FormGroup, 
-  Label, 
-  Input, 
+  FormGroup,
+  Label,
+  Input,
   TextArea,
   Button,
   ImageUploadButton
@@ -25,58 +25,40 @@ import {
 const CadastrarPrato = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [restaurant, setRestaurant] = useState({
     nome: '',
     banner: '',
     descricao: ''
   });
-  
+
   const [dishes, setDishes] = useState([]);
   const [editedDish, setEditedDish] = useState({
     id: null,
     nome: '',
-    preco: 0,
+    preco: '',
     descricao: '',
-    imagem: ''
+    imagem: null,
+    imagemPreview: ''
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  // Carregar dados do restaurante e pratos
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Buscar dados do restaurante
-        const restaurantResponse = await fetch(`http://localhost:3000/restaurantes/${id}`);
-        const restaurantData = await restaurantResponse.json();
+        const restaurantRes = await fetch(`http://localhost:3000/restaurantes/${id}`);
+        const restaurantData = await restaurantRes.json();
         setRestaurant(restaurantData);
-        
-        // Buscar pratos do restaurante
-        const dishesResponse = await fetch(`http://localhost:3000/restaurantes/${id}/pratos`);
-        const dishesData = await dishesResponse.json();
+
+        const dishesRes = await fetch(`http://localhost:3000/restaurantes/${id}/pratos`);
+        const dishesData = await dishesRes.json();
         setDishes(dishesData);
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+      } catch (err) {
+        console.error('Erro ao buscar dados:', err);
       }
     };
-    
     fetchData();
   }, [id]);
-
-  const handleImageChange = (e, isBanner = false) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (isBanner) {
-        setRestaurant(prev => ({ ...prev, banner: reader.result }));
-      } else {
-        setEditedDish(prev => ({ ...prev, imagem: reader.result }));
-      }
-    };
-    reader.readAsDataURL(file);
-  };
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -85,80 +67,92 @@ const CadastrarPrato = () => {
     }).format(value);
   };
 
-  const handlePriceChange = (e) => {
-    const rawValue = e.target.value;
-    const digitsOnly = rawValue.replace(/\D/g, '');
-    const numberValue = parseFloat(digitsOnly) / 100 || 0;
-    setEditedDish(prev => ({ ...prev, preco: numberValue }));
-  };
-
   const handleFieldChange = (e, field) => {
+    let value = e.target.value;
     if (field === 'preco') {
-      handlePriceChange(e);
-    } else {
-      setEditedDish(prev => ({ ...prev, [field]: e.target.value }));
+      const digitsOnly = value.replace(/\D/g, '');
+      value = (parseFloat(digitsOnly) / 100).toFixed(2);
     }
+    setEditedDish((prev) => ({ ...prev, [field]: value }));
   };
 
-  const resetForm = () => {
-    setEditedDish({ id: null, nome: '', preco: 0, descricao: '', imagem: '' });
-    setIsEditing(false);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setEditedDish((prev) => ({
+      ...prev,
+      imagem: file,
+      imagemPreview: URL.createObjectURL(file)
+    }));
   };
 
   const handleEditDish = (dish) => {
-    setEditedDish({ ...dish });
+    setEditedDish({
+      id: dish.id,
+      nome: dish.nome,
+      preco: dish.preco.toFixed(2),
+      descricao: dish.descricao,
+      imagem: null,
+      imagemPreview: dish.imagem
+    });
     setIsEditing(true);
   };
 
+  const resetForm = () => {
+    setEditedDish({
+      id: null,
+      nome: '',
+      preco: '',
+      descricao: '',
+      imagem: null,
+      imagemPreview: ''
+    });
+    setIsEditing(false);
+  };
+
   const handleDeleteDish = async (dishId) => {
-    if (window.confirm('Tem certeza que deseja excluir este prato?')) {
+    if (window.confirm('Deseja realmente excluir este prato?')) {
       try {
-        await fetch(`http://localhost:3000/pratos/${dishId}`, { method: "DELETE" });
-        setDishes(dishes.filter(dish => dish.id !== dishId));
-        alert("Prato excluído com sucesso!");
-      } catch (error) {
-        console.error("Erro ao excluir prato:", error);
-        alert("Erro ao tentar excluir o prato.");
+        await fetch(`http://localhost:3000/pratos/${dishId}`, { method: 'DELETE' });
+        setDishes(dishes.filter((dish) => dish.id !== dishId));
+      } catch (err) {
+        console.error('Erro ao excluir prato:', err);
       }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('nome', editedDish.nome);
+    formData.append('preco', editedDish.preco);
+    formData.append('descricao', editedDish.descricao);
+    formData.append('restauranteId', id);
+    if (editedDish.imagem) {
+      formData.append('imagem', editedDish.imagem);
+    }
+
+    const url = isEditing
+      ? `http://localhost:3000/pratos/${editedDish.id}`
+      : `http://localhost:3000/cadastrar-prato`;
+    const method = isEditing ? 'PUT' : 'POST';
+
     try {
-      const formData = new FormData();
-      formData.append("nome", editedDish.nome);
-      formData.append("preco", editedDish.preco);
-      formData.append("descricao", editedDish.descricao);
-      formData.append("restauranteId", id);
-      
-      if (editedDish.imagem && typeof editedDish.imagem !== 'string') {
-        formData.append("imagem", editedDish.imagem);
-      }
-
-      const url = isEditing 
-        ? `http://localhost:3000/pratos/${editedDish.id}`
-        : "http://localhost:3000/cadastrar-prato";
-      
-      const method = isEditing ? "PUT" : "POST";
-
       const response = await fetch(url, { method, body: formData });
       const result = await response.json();
 
-      if (response.ok) {
-        alert(isEditing ? "Prato atualizado!" : "Prato cadastrado!");
-        if (isEditing) {
-          setDishes(dishes.map(dish => dish.id === editedDish.id ? result : dish));
-        } else {
-          setDishes([...dishes, result]);
-        }
-        resetForm();
+      if (!response.ok) throw new Error(result.message || 'Erro no servidor');
+
+      if (isEditing) {
+        setDishes(dishes.map((dish) => (dish.id === result.id ? result : dish)));
       } else {
-        alert(result.message || "Erro ao salvar prato");
+        setDishes([...dishes, result]);
       }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert("Erro ao tentar salvar o prato.");
+      resetForm();
+    } catch (err) {
+      console.error('Erro ao salvar prato:', err);
+      alert('Erro ao salvar prato.');
     }
   };
 
@@ -173,10 +167,10 @@ const CadastrarPrato = () => {
 
       <RestaurantHeader>
         <BannerUpload>
-          <input 
-            type="file" 
+          <input
+            type="file"
             id="banner"
-            accept="image/*" 
+            accept="image/*"
             onChange={(e) => handleImageChange(e, true)}
             hidden
           />
@@ -188,7 +182,7 @@ const CadastrarPrato = () => {
             </label>
           )}
         </BannerUpload>
-        
+
         <RestaurantInfo>
           <h1>{restaurant.nome}</h1>
           <p>{restaurant.descricao}</p>
@@ -198,7 +192,7 @@ const CadastrarPrato = () => {
       <h2>Cardápio</h2>
 
       <MenuGrid>
-        {dishes.map(dish => (
+        {dishes.map((dish) => (
           <DishCard key={dish.id}>
             <DishImage>
               {dish.imagem ? (
@@ -228,21 +222,15 @@ const CadastrarPrato = () => {
         <h3>{isEditing ? 'Editar Prato' : 'Adicionar Prato'}</h3>
 
         <FormGroup>
-          <Label>Imagem do Prato:</Label>
-          <input 
-            type="file" 
-            id="dishImage"
-            accept="image/*" 
-            onChange={(e) => handleImageChange(e)}
-            hidden
-          />
+          <Label>Imagem:</Label>
+          <input type="file" id="dishImage" accept="image/*" onChange={handleImageChange} hidden />
           <ImageUploadButton htmlFor="dishImage">
-            <FaImage /> {editedDish.imagem ? 'Alterar Imagem' : 'Selecionar Imagem'}
+            <FaImage /> {editedDish.imagemPreview ? 'Alterar Imagem' : 'Selecionar Imagem'}
           </ImageUploadButton>
-          {editedDish.imagem && (
-            <img 
-              src={editedDish.imagem} 
-              alt="Preview" 
+          {editedDish.imagemPreview && (
+            <img
+              src={editedDish.imagemPreview}
+              alt="Preview"
               style={{ width: '80px', marginTop: '10px', borderRadius: '4px' }}
             />
           )}
@@ -250,32 +238,32 @@ const CadastrarPrato = () => {
 
         <FormGroup>
           <Label>Nome:</Label>
-          <Input 
-            type="text" 
-            value={editedDish.nome} 
-            onChange={(e) => handleFieldChange(e, 'nome')} 
-            required 
+          <Input
+            type="text"
+            value={editedDish.nome}
+            onChange={(e) => handleFieldChange(e, 'nome')}
+            required
           />
         </FormGroup>
 
         <FormGroup>
           <Label>Preço:</Label>
-          <Input 
-            type="text" 
-            value={editedDish.preco === 0 ? '' : formatCurrency(editedDish.preco)}
+          <Input
+            type="text"
+            value={editedDish.preco}
             onChange={(e) => handleFieldChange(e, 'preco')}
             placeholder="R$ 0,00"
-            required 
+            required
           />
         </FormGroup>
 
         <FormGroup>
           <Label>Descrição:</Label>
           <TextArea
-            value={editedDish.descricao} 
-            onChange={(e) => handleFieldChange(e, 'descricao')} 
+            value={editedDish.descricao}
+            onChange={(e) => handleFieldChange(e, 'descricao')}
             rows="3"
-            required 
+            required
           />
         </FormGroup>
 

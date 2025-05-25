@@ -1,20 +1,28 @@
-// src/pages/Cadastrar Prato/styled.js
 import styled from 'styled-components';
+
+// Paleta principal
+const primary = '#e63946';
+const lightGray = '#f5f5f5';
+const darkGray = '#333';
+const mediumGray = '#666';
+const borderColor = '#ddd';
 
 export const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
 `;
 
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 20px;
-  font-size: 14px;
+  padding: 15px 0;
+  border-bottom: 2px solid ${borderColor};
+  margin-bottom: 30px;
+  font-size: 15px;
+  font-weight: 500;
+  color: ${darkGray};
 `;
 
 export const RestaurantHeader = styled.div`
@@ -23,25 +31,30 @@ export const RestaurantHeader = styled.div`
 
 export const BannerUpload = styled.div`
   width: 100%;
-  height: 150px;
-  background: #f5f5f5;
+  height: 180px;
+  background: ${lightGray};
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 15px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 12px;
 
   label {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 8px 12px;
-    background: #e63946;
+    gap: 8px;
+    padding: 10px 16px;
+    background: ${primary};
     color: white;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #d62839;
+    }
   }
 
   img {
@@ -56,14 +69,14 @@ export const RestaurantInfo = styled.div`
 
   h1 {
     margin: 0;
-    color: #333;
-    font-size: 24px;
+    color: ${darkGray};
+    font-size: 26px;
   }
 
   p {
-    color: #666;
-    margin-top: 5px;
-    font-size: 14px;
+    color: ${mediumGray};
+    margin-top: 6px;
+    font-size: 15px;
   }
 `;
 
@@ -75,22 +88,23 @@ export const MenuGrid = styled.div`
 `;
 
 export const DishCard = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid ${borderColor};
+  border-radius: 10px;
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
+  background: #fff;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
 `;
 
 export const DishImage = styled.div`
-  height: 120px;
-  background: #f5f5f5;
+  height: 140px;
+  background: ${lightGray};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,64 +126,58 @@ export const DishInfo = styled.div`
   flex-grow: 1;
 
   h3 {
-    margin: 0 0 8px 0;
-    color: #333;
-    font-size: 16px;
+    margin: 0 0 8px;
+    color: ${darkGray};
+    font-size: 17px;
   }
 
   .price {
     font-weight: bold;
-    color: #e63946;
-    margin: 5px 0;
-    font-size: 15px;
+    color: ${primary};
+    margin-bottom: 4px;
   }
 
   .description {
-    color: #666;
-    font-size: 13px;
-    margin: 5px 0;
+    font-size: 14px;
+    color: ${mediumGray};
   }
 `;
 
 export const ActionButtons = styled.div`
   display: flex;
-  border-top: 1px solid #eee;
-  padding: 8px;
+  justify-content: space-around;
+  padding: 10px;
+  background: #fafafa;
+  border-top: 1px solid ${borderColor};
 
   button {
-    flex: 1;
+    background: none;
+    border: none;
+    color: ${primary};
+    font-size: 14px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 5px;
-    padding: 6px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background 0.2s;
-
-    &:first-child {
-      color: #2a9d8f;
-      border-right: 1px solid #eee;
-    }
-
-    &:last-child {
-      color: #e63946;
-    }
 
     &:hover {
-      background: #f9f9f9;
+      text-decoration: underline;
     }
   }
 `;
 
 export const CompactForm = styled.form`
-  background: #f9f9f9;
+  background: #fff;
   padding: 20px;
-  border-radius: 8px;
+  border: 1px solid ${borderColor};
+  border-radius: 10px;
   max-width: 500px;
   margin: 0 auto;
+
+  h3 {
+    margin-bottom: 15px;
+    color: ${darkGray};
+  }
 `;
 
 export const FormGroup = styled.div`
@@ -179,60 +187,71 @@ export const FormGroup = styled.div`
 export const Label = styled.label`
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
+  font-weight: 500;
   font-size: 14px;
+  color: ${darkGray};
 `;
 
 export const Input = styled.input`
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px;
+  border: 1px solid ${borderColor};
+  border-radius: 6px;
   font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: ${primary};
+    box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+  }
 `;
 
 export const TextArea = styled.textarea`
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px;
+  border: 1px solid ${borderColor};
+  border-radius: 6px;
   font-size: 14px;
   resize: vertical;
-  min-height: 80px;
+
+  &:focus {
+    outline: none;
+    border-color: ${primary};
+    box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+  }
 `;
 
 export const Button = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 4px;
+  background: ${(props) => (props.primary ? primary : '#ccc')};
+  color: white;
+  padding: 10px 20px;
   font-size: 14px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  background: ${props => props.primary ? '#e63946' : '#ccc'};
-  color: ${props => props.primary ? 'white' : '#333'};
-  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
 
   &:hover {
-    opacity: 0.9;
+    background: ${(props) => (props.primary ? '#d62839' : '#bbb')};
   }
 `;
 
 export const ImageUploadButton = styled.label`
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 12px;
-  background: #f0f0f0;
-  border: 1px dashed #ccc;
-  border-radius: 4px;
+  gap: 6px;
+  padding: 8px 14px;
+  background: ${primary};
+  color: white;
   font-size: 14px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  margin-top: 5px;
 
   &:hover {
-    background: #e0e0e0;
+    background: #d62839;
   }
 `;
