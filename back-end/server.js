@@ -11,8 +11,8 @@ app.use(cors());
 const prisma = new PrismaClient();
 const upload = multer();
 
-const EMAIL_USER = "seuemail@gmail.com";
-const EMAIL_PASS = "suasenha";
+const EMAIL_USER = "juliochreis@gmail.com";
+const EMAIL_PASS = "mdqc fhpl ieku fzxo";
 
 // Gera código de verificação aleatório
 function gerarCodigo() {
