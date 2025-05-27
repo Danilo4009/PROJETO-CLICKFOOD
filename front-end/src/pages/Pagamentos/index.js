@@ -131,6 +131,24 @@ export default function Pagamentos() {
       }),
     });
 
+  const registrarPedido = await fetch("http://localhost:3000/registrar-pedido", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      carrinho,
+      total: calcularTotal(),
+      email: usuario.email,
+      enderecoEntrega: endereco,
+      metodoPagamento,
+    }),
+  });
+
+const resposta = await registrarPedido.json();
+if (resposta.status !== "ok") {
+  alert("Erro ao registrar o pedido no banco de dados.");
+  return;
+}
+
     const data = await response.json();
     if (data.status === "ok") {
       alert("Nota fiscal enviada com sucesso para seu e-mail!");

@@ -14,12 +14,10 @@ const upload = multer();
 const EMAIL_USER = "juliochreis@gmail.com";
 const EMAIL_PASS = "mdqc fhpl ieku fzxo";
 
-// Gera código de verificação aleatório
 function gerarCodigo() {
   return Math.floor(100000 + Math.random() * 900000);
 }
 
-// Envia e-mail com código de verificação
 async function enviarEmail(destinatario) {
   const codigo = gerarCodigo();
 
@@ -48,7 +46,6 @@ async function enviarEmail(destinatario) {
   }
 }
 
-// Verifica se e-mail já está cadastrado
 app.post("/verificarEmail", async (req, res) => {
   const { email } = req.body;
   try {
@@ -59,7 +56,6 @@ app.post("/verificarEmail", async (req, res) => {
   }
 });
 
-// Envia código para novo e-mail
 app.post("/enviarCodigo", async (req, res) => {
   const { email } = req.body;
 
@@ -76,7 +72,36 @@ app.post("/enviarCodigo", async (req, res) => {
   }
 });
 
-// Cadastro de usuário
+
+
+app.post("/registrar-pedido", async (req, res) => {
+  const { carrinho, total, email, enderecoEntrega, metodoPagamento } = req.body;
+
+  try {
+    const pedido = await prisma.pedido.create({
+      data: {
+        email,
+        enderecoRua: enderecoEntrega.rua,
+        enderecoCidade: enderecoEntrega.cidade,
+        enderecoEstado: enderecoEntrega.estado,
+        enderecoCep: enderecoEntrega.cep,
+        metodoPagamento,
+        total,
+        itens: carrinho,
+      },
+    });
+
+    res.status(201).json({ status: "ok", pedido });
+  } catch (error) {
+    console.error("Erro ao registrar pedido:", error);
+    res.status(500).json({ status: "erro", message: "Erro ao registrar pedido" });
+  }
+});
+
+
+
+
+
 app.post("/cadastrar", async (req, res) => {
   const { name, email, cpf } = req.body;
 
@@ -93,7 +118,8 @@ app.post("/cadastrar", async (req, res) => {
   }
 });
 
-// Cadastro de restaurante com imagem
+
+
 app.post("/cadastrar-restaurante", upload.single("imagem"), async (req, res) => {
   try {
     const { name, email, cnpj, endereco, telefone } = req.body;
@@ -115,7 +141,7 @@ app.post("/cadastrar-restaurante", upload.single("imagem"), async (req, res) => 
   }
 });
 
-// Lista todos os restaurantes
+
 app.get("/restaurantes", async (req, res) => {
   try {
     const restaurantes = await prisma.restaurante.findMany();
@@ -129,7 +155,8 @@ app.get("/restaurantes", async (req, res) => {
   }
 });
 
-// Detalhe do restaurante
+
+
 app.get("/restaurantes/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -148,7 +175,7 @@ app.get("/restaurantes/:id", async (req, res) => {
   }
 });
 
-// Cadastro de prato
+
 app.post("/cadastrar-prato", upload.single("imagem"), async (req, res) => {
   try {
     const { nome, preco, descricao, restauranteId } = req.body;
@@ -175,7 +202,7 @@ app.post("/cadastrar-prato", upload.single("imagem"), async (req, res) => {
   }
 });
 
-// Lista pratos por restaurante
+
 app.get("/restaurantes/:id/pratos", async (req, res) => {
   try {
     const pratos = await prisma.prato.findMany({
@@ -193,7 +220,7 @@ app.get("/restaurantes/:id/pratos", async (req, res) => {
   }
 });
 
-// Detalhe de um prato
+
 app.get("/pratos/:id", async (req, res) => {
   try {
     const prato = await prisma.prato.findUnique({ where: { id: req.params.id } });
@@ -211,7 +238,7 @@ app.get("/pratos/:id", async (req, res) => {
   }
 });
 
-// Atualiza um prato
+
 app.put("/pratos/:id", upload.single("imagem"), async (req, res) => {
   try {
     const { nome, preco, descricao } = req.body;
@@ -233,7 +260,7 @@ app.put("/pratos/:id", upload.single("imagem"), async (req, res) => {
   }
 });
 
-// Exclui um prato
+
 app.delete("/pratos/:id", async (req, res) => {
   try {
     await prisma.prato.delete({ where: { id: req.params.id } });
@@ -243,7 +270,7 @@ app.delete("/pratos/:id", async (req, res) => {
   }
 });
 
-// Envia nota fiscal por e-mail
+
 app.post("/enviar-nota", async (req, res) => {
   const { carrinho, total, email } = req.body;
 
@@ -281,7 +308,7 @@ app.post("/enviar-nota", async (req, res) => {
   }
 });
 
-// Inicia o servidor
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);

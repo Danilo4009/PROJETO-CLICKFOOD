@@ -34,3 +34,16 @@ model Prato {
   restaurante  Restaurante @relation(fields: [restauranteId], references: [id])
   restauranteId String
 }
+
+model Pedido {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  email         String
+  enderecoRua   String
+  enderecoCidade String
+  enderecoEstado String
+  enderecoCep    String
+  metodoPagamento String
+  total         Float
+  itens         Json
+  criadoEm      DateTime @default(now())
+}
