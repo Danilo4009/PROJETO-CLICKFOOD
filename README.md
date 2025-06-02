@@ -1,0 +1,1 @@
+Este projeto é uma plataforma de delivery que conecta clientes, restaurantes e entregadores de forma eficiente e intuitiva. Inspirado no modelo do iFood, o sistema permite que usuários explorem cardápios, façam pedidos e acompanhem suas entregas. Além disso, os restaurantes podem gerenciar seus pedidos e cardápios, enquanto os entregadores recebem notificações de novas entregas.
