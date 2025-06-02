@@ -308,6 +308,44 @@ app.post("/enviar-nota", async (req, res) => {
   }
 });
 
+app.get("/relatorio-vendas", async (req, res) => {
+  try {
+    const pedidos = await prisma.pedido.findMany({
+      orderBy: { criadoEm: "desc" },
+    });
+
+    const filtroMes = parseInt(req.query.mes); // 1-12
+    const filtroAno = parseInt(req.query.ano);
+
+    const vendasFiltradas = pedidos.filter((pedido) => {
+      const data = new Date(pedido.criadoEm);
+      const mes = data.getMonth() + 1;
+      const ano = data.getFullYear();
+      return (!filtroMes || mes === filtroMes) && (!filtroAno || ano === filtroAno);
+    });
+
+    const totalFiltrado = vendasFiltradas.reduce((acc, pedido) => acc + pedido.total, 0);
+    const totalGeral = pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
+
+    const vendasPorMes = {};
+    pedidos.forEach((pedido) => {
+      const data = new Date(pedido.criadoEm);
+      const mesAno = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
+      vendasPorMes[mesAno] = (vendasPorMes[mesAno] || 0) + pedido.total;
+    });
+
+    res.status(200).json({
+      totalFiltrado: totalFiltrado.toFixed(2),
+      totalGeral: totalGeral.toFixed(2),
+      vendasPorMes,
+    });
+  } catch (error) {
+    console.error("Erro no relatório:", error);
+    res.status(500).json({ error: "Erro ao gerar relatório" });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

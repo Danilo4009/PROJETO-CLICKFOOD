@@ -8,6 +8,9 @@ import CadastroPrato from "./pages/Cadastrar Prato";
 import Stores from "./components/Stores";
 import Pagamentos from "./pages/Pagamentos"; 
 import AcompanhamentoPedido from "./pages/Acompanhar_Pedido";
+import RelatorioVendas from "./pages/Relatorio";
+
+
 
 const AppRoutes = () => {
   return (
@@ -19,6 +22,8 @@ const AppRoutes = () => {
       <Route path="/lojas" element={<Stores />} />
       <Route path="/pagamento" element={<Pagamentos />} />
       <Route path="/acompanhamento" element={<AcompanhamentoPedido />} />
+      <Route path="/relatorio" element={<RelatorioVendas />} />
+
     </Routes>
   );
 };

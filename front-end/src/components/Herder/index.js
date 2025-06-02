@@ -69,6 +69,10 @@ function Header(props) {
             <li>
               <Link to="/lojas">Lojas</Link>
             </li>
+            <li>
+              <Link to="/relatorio">Relatório</Link>
+            </li>
+
           </ul>
 
           <div className="avatar">
